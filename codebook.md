@@ -1,6 +1,6 @@
-#Getting and Cleaning Data Course Project
+# Getting and Cleaning Data Course Project
                         
-##List of variables on the working file:
+## List of variables on the working file:
 
 
 * activityid
