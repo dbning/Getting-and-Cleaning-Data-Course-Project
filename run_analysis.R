@@ -1,4 +1,4 @@
-library(plyr)
+
 
 
 
@@ -54,9 +54,18 @@ meanandstd$activityid[meanandstd$activityid == "5"] <- "standing"
 meanandstd$activityid[meanandstd$activityid == "6"] <- "laying"
 
 # Appropriately labels the data set with descriptive variable names
-names(meanandstd)<- gsub("\\(", "", names(meanandstd))
-names(meanandstd)<- gsub("\\)", "", names(meanandstd))
+names(meanandstd)<- gsub("[()]", "", names(meanandstd))
+
 
 # creates a second, independent tidy data set with the average of each variable for each activity and each subject
-avgdata <- ddply(meanandstd, c("activityid", "subjectid"), numcolwise(mean))
-write.table(avgdata, file = "avgdata.csv", row.name=FALSE)
+library(tidyr)
+library(dplyr)
+
+avgdata <- (gather(meanandstd, measurementkey, measurementvalue, -c(activityid, subjectid)) 
+                %>% group_by(activityid, subjectid, measurementkey)
+                %>% summarize(measurementvalue = mean(measurementvalue))
+                %>% spread(measurementkey, measurementvalue))
+
+
+# write to file        
+write.table(avgdata, file = "avgdata.txt", row.name=FALSE)
